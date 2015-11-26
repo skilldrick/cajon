@@ -1,4 +1,4 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './app/App.js',
@@ -18,10 +18,12 @@ module.exports = {
       },
     ]
   },
-  plugins: [new HtmlWebpackPlugin({
-    template: __dirname + '/app/index.html',
-    hash: true,
-    filename: 'index.html',
-    inject: 'body'
-  })]
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: __dirname + '/app/index.html',
+      hash: true,
+      filename: 'index.html',
+      inject: 'body'
+    })
+  ]
 };
