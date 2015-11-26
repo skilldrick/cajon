@@ -7,9 +7,26 @@ const bufferNames = {
   'kick1': 'samples/drumatic3/2085__opm__kk-set1.wav'
 };
 
-getAudioBuffers(ctx, bufferNames).then(buffers => {
-  console.log('foo', bufferNames);
-  console.log('bar', buffers);
+//TODO: don't do this
+let buffers = null;
+
+getAudioBuffers(ctx, bufferNames).then(buffs => {
+  buffers = buffs;
+
+  //setInterval(() => playSource('kick1'), 500);
 });
 
-module.exports = {ctx};
+const createSource = (buffer) => {
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  source.connect(ctx.destination);
+  return source;
+};
+
+const playSource = (name) => {
+  const source = createSource(buffers[name]);
+  source.start();
+};
+
+
+module.exports = {ctx, playSource};
