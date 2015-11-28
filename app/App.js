@@ -12,11 +12,6 @@ class App extends Component {
   }
 
   handleKeydown = event => {
-    if (event.which === 70 || event.which === 71) {
-      playSource('kk1');
-    } else if (event.which === 74 || event.which === 75) {
-      playSource('sn5');
-    }
   }
 
   componentDidMount() {
@@ -27,7 +22,9 @@ class App extends Component {
 class Grid extends Component {
   render() {
     return (<div>
-      {this.props.samples.map((row, i) => (<Row row={row} key={i} />))}
+      {this.props.samples.map((row, i) =>
+        (<Row row={row} key={i} />)
+      )}
     </div>);
   }
 }
