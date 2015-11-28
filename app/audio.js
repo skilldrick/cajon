@@ -11,4 +11,6 @@ const createSource = (buffer) => {
 
 const getBuffers = bufferMap => getAudioBuffers(ctx, bufferMap);
 
-module.exports = {ctx, createSource, getBuffers};
+const getCurrentTime = () => ctx.currentTime;
+
+module.exports = {ctx, createSource, getBuffers, getCurrentTime};

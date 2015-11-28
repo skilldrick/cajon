@@ -1,4 +1,5 @@
-import {createSource, getBuffers} from "./audio.js";
+import {createSource, getBuffers, getCurrentTime} from "./audio.js";
+import {objToAssoc, assocToObj, flatten} from './utils.js';
 
 const bufferNames = {
   'ch1': 'samples/drumatic3/2075__opm__ch-set1.wav',
@@ -43,13 +44,20 @@ let buffers = null;
 
 getBuffers(bufferNames).then(buffs => {
   buffers = buffs;
-
-  //setInterval(() => playSource('tm3'), 500);
 });
 
-const playSource = (name) => {
+const playSource = (name, startTime=0) => {
   const source = createSource(buffers[name]);
-  source.start();
+  source.start(startTime);
+};
+
+const playNotes = (notes) => {
+  const now = getCurrentTime();
+
+  for (let {offset, sample} of notes) {
+    playSource(sample, now + offset);
+    console.log(offset, sample);
+  }
 };
 
 const samples = [
@@ -59,4 +67,7 @@ const samples = [
   [['Z', 'kk3'], ['X', 'kk4'], ['C', 'ch2'], ['V', 'oh4']],
 ];
 
-module.exports = {playSource, samples};
+// TODO: not currently used
+const sampleMap = assocToObj(flatten(samples));
+
+module.exports = {playSource, samples, sampleMap, playNotes};

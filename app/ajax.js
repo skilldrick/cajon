@@ -1,3 +1,5 @@
+import {objToAssoc, assocToObj} from './utils.js';
+
 const getData = (filename, cb) => {
   const request = new XMLHttpRequest();
   request.open('GET', filename, true);
@@ -7,17 +9,6 @@ const getData = (filename, cb) => {
   };
   request.send();
 }
-
-const objToAssoc = obj => {
-  return Object.keys(obj).map(key => [key, obj[key]]);
-};
-
-const assocToObj = assoc => {
-  return assoc.reduce((obj, [key, val]) => {
-    obj[key] = val;
-    return obj;
-  }, {});
-};
 
 const getAudioBuffer = (ctx, filename) => {
   return new Promise(resolve => {
