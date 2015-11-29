@@ -15,6 +15,7 @@ class Scheduler {
   }
 
   addNotes(notes) {
+    //TODO: these need to be sorted
     this.notes = this.notes.concat(notes);
   }
 
@@ -23,11 +24,14 @@ class Scheduler {
     let lastTime = getCurrentTime();
     let timeInBeats = 0;
 
+    let i = 0;
     this.queuedNotes = [];
 
     const intervalFunc = () => {
       const now = getCurrentTime();
       const diff = now - lastTime;
+
+      // If diff is greater than lookAhead, we've missed notes
       if (diff > this.lookAhead) {
         this.stop();
         throw new Error("Timer failed - did you change tabs?");
@@ -36,14 +40,22 @@ class Scheduler {
       lastTime = now;
       timeInBeats = timeInBeats + diff / this.beatLength;
 
-      let i = 0;
       const maxTime = now + this.lookAhead;
 
-      while (notes[i] && (notes[i].offset - timeInBeats) * this.beatLength + now < maxTime) {
+      while (notes[i]) {
+        const note = notes[i];
+        const noteOffsetFromNow = (note.beatOffset - timeInBeats) * this.beatLength;
+        const noteTime = now + noteOffsetFromNow;
+
+        if (noteTime > maxTime) {
+          break;
+        }
+
         this.queuedNotes.push(
-          playSource(notes[i].sample, (notes[i].offset - timeInBeats) * this.beatLength + now)
+          playSource(note.sample, noteTime)
         );
-        notes.splice(0, 1);
+
+        console.log(note);
         i++;
       }
     };
