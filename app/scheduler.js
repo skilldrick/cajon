@@ -10,7 +10,6 @@ class Scheduler {
   }
 
   setBpm(bpm) {
-    console.log(bpm);
     this.beatLength = 60 / bpm;
   }
 
@@ -20,8 +19,8 @@ class Scheduler {
   }
 
   start(beginOffset, endOffset, loop = false) {
-    const notes = this.notes.slice();
-    let lastTime = getCurrentTime();
+
+    let previousTime = getCurrentTime();
     let timeInBeats = 0;
 
     let i = 0;
@@ -29,7 +28,9 @@ class Scheduler {
 
     const intervalFunc = () => {
       const now = getCurrentTime();
-      const diff = now - lastTime;
+      const diff = now - previousTime;
+      const diffInBeats = diff / this.beatLength;
+      previousTime = now;
 
       // If diff is greater than lookAhead, we've missed notes
       if (diff > this.lookAhead) {
@@ -37,13 +38,12 @@ class Scheduler {
         throw new Error("Timer failed - did you change tabs?");
       }
 
-      lastTime = now;
-      timeInBeats = timeInBeats + diff / this.beatLength;
+      timeInBeats += diffInBeats;
 
       const maxTime = now + this.lookAhead;
 
-      while (notes[i]) {
-        const note = notes[i];
+      while (this.notes[i]) {
+        const note = this.notes[i];
         const noteOffsetFromNow = (note.beatOffset - timeInBeats) * this.beatLength;
         const noteTime = now + noteOffsetFromNow;
 
