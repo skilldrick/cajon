@@ -19,6 +19,7 @@ class Scheduler {
   }
 
   start(beginOffset, endOffset, loop = false) {
+    const notes = this.notes.slice();
     let lastTime = getCurrentTime();
     let timeInBeats = 0;
 
@@ -35,15 +36,15 @@ class Scheduler {
       lastTime = now;
       timeInBeats = timeInBeats + diff / this.beatLength;
 
-      let nextNote = this.notes[0];
+      let i = 0;
       const maxTime = now + this.lookAhead;
 
-      while (nextNote && (nextNote.offset - timeInBeats) * this.beatLength + now < maxTime) {
+      while (notes[i] && (notes[i].offset - timeInBeats) * this.beatLength + now < maxTime) {
         this.queuedNotes.push(
-          playSource(nextNote.sample, (nextNote.offset - timeInBeats) * this.beatLength + now)
+          playSource(notes[i].sample, (notes[i].offset - timeInBeats) * this.beatLength + now)
         );
-        this.notes.splice(0, 1);
-        nextNote = this.notes[0];
+        notes.splice(0, 1);
+        i++;
       }
     };
 

@@ -11,7 +11,7 @@ class Metronome {
   start() {
     this.scheduler = new Scheduler(this.bpm);
 
-    var notes = Range(0, 64).map(i => {
+    var notes = Range(0, 16).map(i => {
       return {
         offset: i,
         sample: 'rs2'
