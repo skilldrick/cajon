@@ -19,7 +19,7 @@ class Scheduler {
   }
 
   start(beginOffset, endOffset, loop = false) {
-
+    let notes = this.notes;
     let previousTime = getCurrentTime();
     let timeInBeats = 0;
 
@@ -42,8 +42,8 @@ class Scheduler {
 
       const maxTime = now + this.lookAhead;
 
-      while (this.notes[i]) {
-        const note = this.notes[i];
+      while (notes[i]) {
+        const note = notes[i];
         const noteOffsetFromNow = (note.beatOffset - timeInBeats) * this.beatLength;
         const noteTime = now + noteOffsetFromNow;
 
@@ -57,6 +57,12 @@ class Scheduler {
 
         console.log(note);
         i++;
+      }
+
+      // Once we've gone through all notes, shift them forward by loop length
+      if (i === notes.length) {
+        notes.forEach(note => note.beatOffset += 4);
+        i = 0;
       }
     };
 
