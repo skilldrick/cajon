@@ -62,6 +62,7 @@ class Controls extends Component {
         <button onClick={this.start}>Start Recording</button>
         <button onClick={this.stop}>Stop Recording</button>
         <button onClick={this.play}>Play</button>
+        <input onInput={this.bpmChange} type="number" />
       </div>
     );
   }
@@ -76,6 +77,10 @@ class Controls extends Component {
 
   play = () => {
     this.props.recorder.play();
+  }
+
+  bpmChange = (event) => {
+    this.props.recorder.setBpm(event.target.value);
   }
 }
 

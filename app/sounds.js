@@ -49,6 +49,11 @@ getBuffers(bufferNames).then(buffs => {
 const playSource = (name, startTime=0) => {
   const source = createSource(buffers[name]);
   source.start(startTime);
+  return {
+    stop() {
+      source.stop()
+    }
+  }
 };
 
 const playNotes = (notes) => {
@@ -67,7 +72,4 @@ const samples = [
   [['Z', 'kk3'], ['X', 'kk4'], ['C', 'ch2'], ['V', 'oh4']],
 ];
 
-// TODO: not currently used
-const sampleMap = assocToObj(flatten(samples));
-
-module.exports = {playSource, samples, sampleMap, playNotes};
+module.exports = {playSource, samples, playNotes};

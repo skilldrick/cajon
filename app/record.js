@@ -1,5 +1,6 @@
 import {getCurrentTime} from './audio.js';
 import {playNotes} from './sounds.js';
+import Metronome from './metronome.js';
 
 class Recorder {
   constructor() {
@@ -11,13 +12,15 @@ class Recorder {
     this.running = true;
     this.startTime = getCurrentTime();
     this.notes = [];
-    console.log('start');
+
+    this.metronome && this.metronome.stop();
+    this.metronome = new Metronome(120);
+    this.metronome.start();
   }
 
   stop() {
     this.running = false;
-    console.log('stop');
-    console.log(this.notes);
+    this.metronome.stop();
   }
 
   addNote(sample) {
@@ -26,13 +29,16 @@ class Recorder {
         offset: getCurrentTime() - this.startTime,
         sample
       };
-      console.log(note);
       this.notes.push(note);
     }
   }
 
   play() {
     playNotes(this.notes);
+  }
+
+  setBpm(bpm) {
+    this.metronome && this.metronome.setBpm(bpm);
   }
 }
 
