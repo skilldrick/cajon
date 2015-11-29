@@ -61,7 +61,7 @@ class Scheduler {
 
       // Once we've gone through all notes, shift them forward by loop length
       if (i === notes.length) {
-        notes.forEach(note => note.beatOffset += 4);
+        notes.forEach(note => note.beatOffset += endOffset);
         i = 0;
       }
     };
