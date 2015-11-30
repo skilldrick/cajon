@@ -19,7 +19,7 @@ class Metronome {
     }).toArray();
 
     this.scheduler.addNotes(notes);
-    this.scheduler.start(8, 12, true);
+    this.scheduler.start(8, 4, true);
   }
 
   stop() {

@@ -1,5 +1,6 @@
 import {playSource} from './sounds.js';
 import {getCurrentTime} from './audio.js';
+import {mapField} from './utils.js';
 
 class Scheduler {
   constructor(bpm) {
@@ -18,8 +19,9 @@ class Scheduler {
     this.notes = this.notes.concat(notes);
   }
 
-  start(beginOffset, endOffset, loop = false) {
-    let notes = this.limit(this.notes, beginOffset, endOffset);
+  start(beginOffset, length, loop = false) {
+    let notes = this.limit(this.notes, beginOffset, beginOffset + length);
+    console.log('notes', notes);
     let previousTime = getCurrentTime();
     let timeInBeats = 0;
 
@@ -59,10 +61,12 @@ class Scheduler {
         i++;
       }
 
-      // Once we've gone through all notes, shift them forward by loop length
-      if (i === notes.length) {
-        notes = this.shift(notes, endOffset - beginOffset);
-        i = 0;
+      if (loop) {
+        // Once we've gone through all notes, shift them forward by loop length
+        if (i === notes.length) {
+          notes = this.shift(notes, length);
+          i = 0;
+        }
       }
     };
 
@@ -76,9 +80,7 @@ class Scheduler {
   }
 
   shift(notes, offset) {
-    return notes.map(note => Object.assign({}, note, {
-      beatOffset: note.beatOffset + offset
-    }));
+    return mapField(notes, 'beatOffset', beatOffset => beatOffset + offset);
   }
 
   limit(notes, begin, end) {

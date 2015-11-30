@@ -1,11 +1,14 @@
 import {getCurrentTime} from './audio.js';
 import {playNotes} from './sounds.js';
+import {mapField} from './utils.js';
 import Metronome from './metronome.js';
+import Scheduler from './scheduler.js';
 
 class Recorder {
   constructor() {
     this.running = false;
     this.startTime = 0;
+    this.bpm = 120;
   }
 
   start() {
@@ -14,19 +17,23 @@ class Recorder {
     this.notes = [];
 
     this.metronome && this.metronome.stop();
-    this.metronome = new Metronome(120);
+    this.metronome = new Metronome(this.bpm);
     this.metronome.start();
   }
 
   stop() {
     this.running = false;
     this.metronome.stop();
+    this.scheduler && this.scheduler.stop();
   }
 
   addNote(sample) {
+    const beatLength = 60 / this.bpm;
     if (this.running) {
+      const offset = getCurrentTime() - this.startTime;
       const note = {
-        offset: getCurrentTime() - this.startTime,
+        offset,
+        beatOffset: offset / beatLength,
         sample
       };
       this.notes.push(note);
@@ -34,11 +41,21 @@ class Recorder {
   }
 
   play() {
-    playNotes(this.notes);
+    this.scheduler = new Scheduler(120);
+    this.scheduler.addNotes(this.quantize(this.notes));
+    this.scheduler.start(4, 4, true);
   }
 
   setBpm(bpm) {
     this.metronome && this.metronome.setBpm(bpm);
+    this.scheduler && this.scheduler.setBpm(bpm);
+  }
+
+  quantize(notes) {
+    const quantizeAmount = 16;
+    return mapField(notes, 'beatOffset', beatOffset => {
+      return Math.round(beatOffset * quantizeAmount) / quantizeAmount;
+    });
   }
 }
 

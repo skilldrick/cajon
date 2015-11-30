@@ -15,4 +15,10 @@ const flatten = arr => {
   }, []);
 };
 
-module.exports = {objToAssoc, assocToObj, flatten};
+const mapField = (arr, field, cb) => {
+  return arr.map(el => Object.assign({}, el, {
+    [field]: cb(el[field])
+  }));
+};
+
+module.exports = {objToAssoc, assocToObj, flatten, mapField};
