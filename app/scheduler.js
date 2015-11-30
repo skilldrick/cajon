@@ -19,7 +19,7 @@ class Scheduler {
   }
 
   start(beginOffset, endOffset, loop = false) {
-    let notes = this.notes;
+    let notes = this.limit(this.notes, beginOffset, endOffset);
     let previousTime = getCurrentTime();
     let timeInBeats = 0;
 
@@ -61,7 +61,7 @@ class Scheduler {
 
       // Once we've gone through all notes, shift them forward by loop length
       if (i === notes.length) {
-        notes.forEach(note => note.beatOffset += endOffset);
+        notes = this.shift(notes, endOffset - beginOffset);
         i = 0;
       }
     };
@@ -73,6 +73,18 @@ class Scheduler {
   stop() {
     clearInterval(this.interval);
     this.queuedNotes && this.queuedNotes.forEach(note => note.stop());
+  }
+
+  shift(notes, offset) {
+    return notes.map(note => Object.assign({}, note, {
+      beatOffset: note.beatOffset + offset
+    }));
+  }
+
+  limit(notes, begin, end) {
+    return this.shift(notes.filter(note =>
+      note.beatOffset >= begin && note.beatOffset < end
+    ), -begin);
   }
 }
 
