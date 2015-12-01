@@ -1,11 +1,12 @@
 import {playSource} from './sounds.js';
 import {getCurrentTime} from './audio.js';
 import {mapField} from './utils.js';
+import {List} from 'immutable';
 
 class Scheduler {
   constructor(bpm) {
     this.setBpm(bpm);
-    this.notes = [];
+    this.notes = List();
     this.intervalTime = 100;
     this.lookAhead = this.intervalTime * 1.5 / 1000;
   }
@@ -15,13 +16,11 @@ class Scheduler {
   }
 
   addNotes(notes) {
-    //TODO: these need to be sorted
-    this.notes = this.notes.concat(notes);
+    this.notes = this.notes.concat(notes).sortBy(note => note.beatOffset);
   }
 
   start(beginOffset, length, loop = false) {
     let notes = this.limit(this.notes, beginOffset, beginOffset + length);
-    console.log('notes', notes);
     let previousTime = getCurrentTime();
     let timeInBeats = 0;
 
@@ -44,8 +43,8 @@ class Scheduler {
 
       const maxTime = now + this.lookAhead;
 
-      while (notes[i]) {
-        const note = notes[i];
+      while (notes.has(i)) {
+        const note = notes.get(i);
         const noteOffsetFromNow = (note.beatOffset - timeInBeats) * this.beatLength;
         const noteTime = now + noteOffsetFromNow;
 
@@ -63,7 +62,7 @@ class Scheduler {
 
       if (loop) {
         // Once we've gone through all notes, shift them forward by loop length
-        if (i === notes.length) {
+        if (i === notes.size) {
           notes = this.shift(notes, length);
           i = 0;
         }

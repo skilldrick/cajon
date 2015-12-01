@@ -52,7 +52,7 @@ class Recorder {
   }
 
   quantize(notes) {
-    const quantizeAmount = 16;
+    const quantizeAmount = 8;
     return mapField(notes, 'beatOffset', beatOffset => {
       return Math.round(beatOffset * quantizeAmount) / quantizeAmount;
     });
