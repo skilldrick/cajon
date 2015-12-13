@@ -32,7 +32,6 @@ class Recorder {
     if (this.running) {
       const offset = getCurrentTime() - this.startTime;
       const note = {
-        offset,
         beatOffset: offset / beatLength,
         sample
       };
