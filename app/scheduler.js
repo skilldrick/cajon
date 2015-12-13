@@ -1,47 +1,26 @@
 import {playSource} from './sounds.js';
-import {getCurrentTime} from './audio.js';
 import {mapField} from './utils.js';
-import Clock from './clock.js';
+import clock from './clock.js';
 import {List} from 'immutable';
 
 class Scheduler {
   constructor(bpm, notes) {
     this.setBpm(bpm);
-    this.notes = List();
-    this.intervalTime = 100;
-    this.lookAhead = this.intervalTime * 1.5 / 1000;
-
-    this.notes = notes.sortBy(note => note.beatOffset);
+    this.notes = List(notes).sortBy(note => note.beatOffset);
   }
 
   setBpm(bpm) {
     this.beatLength = 60 / bpm;
+    clock.beatLength = this.beatLength;
   }
 
   start(beginOffset, length, loop = false) {
     let notes = this.limit(this.notes, beginOffset, beginOffset + length);
-    let previousTime = getCurrentTime();
-    let timeInBeats = 0;
 
     let i = 0;
     this.queuedNotes = [];
 
-    const intervalFunc = () => {
-      const now = getCurrentTime();
-      const diff = now - previousTime;
-      const diffInBeats = diff / this.beatLength;
-      previousTime = now;
-
-      // If diff is greater than lookAhead, we've missed notes
-      if (diff > this.lookAhead) {
-        this.stop();
-        throw new Error("Timer failed - did you change tabs?");
-      }
-
-      timeInBeats += diffInBeats;
-
-      const maxTime = now + this.lookAhead;
-
+    this.cb = (timeInBeats, now, maxTime) => {
       while (notes.has(i)) {
         const note = notes.get(i);
         const noteOffsetFromNow = (note.beatOffset - timeInBeats) * this.beatLength;
@@ -66,15 +45,17 @@ class Scheduler {
           i = 0;
         }
       }
-    };
+    }
 
-    intervalFunc();
-    this.interval = setInterval(intervalFunc, this.intervalTime);
+    clock.addCallback(this.cb);
+    clock.start();
   }
 
   stop() {
-    clearInterval(this.interval);
     this.queuedNotes && this.queuedNotes.forEach(note => note.stop());
+
+    clock.removeCallback(this.cb);
+    clock.stop();
   }
 
   shift(notes, offset) {
