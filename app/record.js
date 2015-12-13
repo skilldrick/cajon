@@ -16,9 +16,13 @@ class Recorder {
     this.startTime = getCurrentTime();
     this.notes = [];
 
+    this.scheduler = new Scheduler(this.bpm);
+
+    /*
     this.metronome && this.metronome.stop();
     this.metronome = new Metronome(this.bpm);
     this.metronome.start();
+    */
   }
 
   stop() {
@@ -41,8 +45,7 @@ class Recorder {
   }
 
   play() {
-    this.scheduler = new Scheduler(120);
-    this.scheduler.addNotes(this.quantize(this.notes));
+    this.scheduler = new Scheduler(this.bpm, this.quantize(this.notes));
     this.scheduler.start(4, 4, true);
   }
 
@@ -52,7 +55,7 @@ class Recorder {
   }
 
   quantize(notes) {
-    const quantizeAmount = 8;
+    const quantizeAmount = 16;
     return mapField(notes, 'beatOffset', beatOffset => {
       return Math.round(beatOffset * quantizeAmount) / quantizeAmount;
     });

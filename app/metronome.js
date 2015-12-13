@@ -9,17 +9,13 @@ class Metronome {
   }
 
   start() {
-    this.scheduler = new Scheduler(this.bpm);
+    var note = {
+      beatOffset: 0,
+      sample: 'rs2'
+    };
 
-    var notes = Range(0, 64).map(i => {
-      return {
-        beatOffset: i,
-        sample: 'rs2'
-      };
-    }).toArray();
-
-    this.scheduler.addNotes(notes);
-    this.scheduler.start(8, 4, true);
+    this.scheduler = new Scheduler(this.bpm, [note]);
+    this.scheduler.start(0, 1, true);
   }
 
   stop() {

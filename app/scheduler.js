@@ -1,22 +1,21 @@
 import {playSource} from './sounds.js';
 import {getCurrentTime} from './audio.js';
 import {mapField} from './utils.js';
+import Clock from './clock.js';
 import {List} from 'immutable';
 
 class Scheduler {
-  constructor(bpm) {
+  constructor(bpm, notes) {
     this.setBpm(bpm);
     this.notes = List();
     this.intervalTime = 100;
     this.lookAhead = this.intervalTime * 1.5 / 1000;
+
+    this.notes = notes.sortBy(note => note.beatOffset);
   }
 
   setBpm(bpm) {
     this.beatLength = 60 / bpm;
-  }
-
-  addNotes(notes) {
-    this.notes = this.notes.concat(notes).sortBy(note => note.beatOffset);
   }
 
   start(beginOffset, length, loop = false) {
