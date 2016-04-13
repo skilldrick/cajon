@@ -1,7 +1,7 @@
 {
-  "name": "Music2",
+  "name": "Cajon",
   "version": "0.1.0",
-  "description": "?",
+  "description": "A web drum machine",
   "main": "webpack.config.js",
   "scripts": {
     "prestart": "webpack",
