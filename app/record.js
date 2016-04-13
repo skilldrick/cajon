@@ -11,7 +11,7 @@ class Recorder {
     this.bpm = 120;
   }
 
-  start() {
+  startRecording() {
     this.running = true;
     this.startTime = getCurrentTime();
     this.notes = [];

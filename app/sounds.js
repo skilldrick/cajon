@@ -46,6 +46,7 @@ getBuffers(bufferNames).then(buffs => {
   buffers = buffs;
 });
 
+//TODO: move this to sine
 const playSource = (name, startTime=0) => {
   const source = createSource(buffers[name]);
   source.start(startTime);

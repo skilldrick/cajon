@@ -1,6 +1,6 @@
 import {playSource} from './sounds.js';
 import {mapField} from './utils.js';
-import clock from './clock.js';
+import clock from 'sine/clock';
 import {List} from 'immutable';
 
 class Scheduler {
@@ -10,8 +10,7 @@ class Scheduler {
   }
 
   setBpm(bpm) {
-    this.beatLength = 60 / bpm;
-    clock.beatLength = this.beatLength;
+    clock.setBpm(bpm);
   }
 
   start(beginOffset, length, loop = false) {
@@ -20,13 +19,15 @@ class Scheduler {
     let i = 0;
     this.queuedNotes = [];
 
-    this.cb = (timeInBeats, now, maxTime) => {
+    //beat, now, timeUntilBeat, this.beatLength
+    //this.cb = (timeInBeats, now, maxTime) => {
+    this.cb = (beat, now, timeUntilBeat, beatLength) => {
       while (notes.has(i)) {
         const note = notes.get(i);
-        const noteOffsetFromNow = (note.beatOffset - timeInBeats) * this.beatLength;
-        const noteTime = now + noteOffsetFromNow;
+        const noteOffsetFromNow = (note.beatOffset - beat) * beatLength;
+        const noteTime = now + noteOffsetFromNow + timeUntilBeat;
 
-        if (noteTime > maxTime) {
+        if (note.beatOffset >= beat + 1) {
           break;
         }
 
@@ -38,6 +39,7 @@ class Scheduler {
         i++;
       }
 
+      // TODO: Don't need to do this, just modulo the beat number
       if (loop) {
         // Once we've gone through all notes, shift them forward by loop length
         if (i === notes.size) {

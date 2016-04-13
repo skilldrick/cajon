@@ -68,7 +68,7 @@ class Controls extends Component {
   }
 
   start = () => {
-    this.props.recorder.start();
+    this.props.recorder.startRecording();
   }
 
   stop = () => {
