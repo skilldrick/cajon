@@ -8,7 +8,6 @@ class Scheduler {
     this.partitionedNotes = this.partition(notes);
   }
 
-
   partition(notes) {
     const partitioned = [];
     notes.forEach(note => {
@@ -21,7 +20,6 @@ class Scheduler {
 
     return partitioned;
   }
-
 
   setBpm(bpm) {
     clock.setBpm(bpm);
@@ -55,16 +53,6 @@ class Scheduler {
 
     clock.removeCallback(this.cb);
     clock.stop();
-  }
-
-  shift(notes, offset) {
-    return mapField(notes, 'beatOffset', beatOffset => beatOffset + offset);
-  }
-
-  limit(notes, begin, end) {
-    return this.shift(notes.filter(note =>
-      note.beatOffset >= begin && note.beatOffset < end
-    ), -begin);
   }
 }
 

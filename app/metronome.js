@@ -1,5 +1,4 @@
 import Scheduler from './scheduler.js';
-import {Range} from 'immutable';
 
 class Metronome {
   constructor(bpm) {

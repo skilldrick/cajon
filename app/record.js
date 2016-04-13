@@ -1,4 +1,4 @@
-import {getCurrentTime} from './audio.js';
+import {getCurrentTime} from 'sine/audio';
 import {playNotes} from './sounds.js';
 import {mapField} from './utils.js';
 import Metronome from './metronome.js';

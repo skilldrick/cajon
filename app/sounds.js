@@ -1,4 +1,5 @@
-import {createSource, getBuffers, getCurrentTime} from "./audio.js";
+import {ctx, getCurrentTime} from "sine/audio";
+import getAudioBuffer from 'sine/ajax';
 import {objToAssoc, assocToObj, flatten} from './utils.js';
 
 const bufferNames = {
@@ -39,12 +40,28 @@ const bufferNames = {
   'tm5': 'samples/drumatic3/2109__opm__tm-set5.wav',
 };
 
+const getBuffers = (bufferMap) => {
+  const bufferFutures = objToAssoc(bufferMap).map(([key, filename]) => {
+    return getAudioBuffer(filename).then(buffer => [key, buffer]);
+  });
+
+  return Promise.all(bufferFutures).then(buffers => assocToObj(buffers));
+}
+
 //TODO: don't do this
 let buffers = null;
 
 getBuffers(bufferNames).then(buffs => {
   buffers = buffs;
 });
+
+//TODO: move this to sine
+const createSource = (buffer) => {
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  source.connect(ctx.destination);
+  return source;
+};
 
 //TODO: move this to sine
 const playSource = (name, startTime=0) => {
