@@ -1,53 +1,50 @@
 import {playSource} from './sounds.js';
 import {mapField} from './utils.js';
 import clock from 'sine/clock';
-import {List} from 'immutable';
 
 class Scheduler {
   constructor(bpm, notes) {
     this.setBpm(bpm);
-    this.notes = List(notes).sortBy(note => note.beatOffset);
+    this.partitionedNotes = this.partition(notes);
   }
+
+
+  partition(notes) {
+    const partitioned = [];
+    notes.forEach(note => {
+      const partition = Math.floor(note.beatOffset);
+      if (!partitioned[partition]) {
+        partitioned[partition] = [];
+      }
+      partitioned[partition].push(note);
+    });
+
+    return partitioned;
+  }
+
 
   setBpm(bpm) {
     clock.setBpm(bpm);
   }
 
   start(beginOffset, length, loop = false) {
-    let notes = this.limit(this.notes, beginOffset, beginOffset + length);
-
-    let i = 0;
     this.queuedNotes = [];
 
-    //beat, now, timeUntilBeat, this.beatLength
-    //this.cb = (timeInBeats, now, maxTime) => {
-    this.cb = (beat, now, timeUntilBeat, beatLength) => {
-      while (notes.has(i)) {
-        const note = notes.get(i);
+    this.cb = (realBeat, now, timeUntilBeat, beatLength) => {
+      const beat = realBeat % length + beginOffset;
+      const notes = this.partitionedNotes[beat];
+
+      notes && notes.forEach(note => {
         const noteOffsetFromNow = (note.beatOffset - beat) * beatLength;
         const noteTime = now + noteOffsetFromNow + timeUntilBeat;
-
-        if (note.beatOffset >= beat + 1) {
-          break;
-        }
 
         this.queuedNotes.push(
           playSource(note.sample, noteTime)
         );
 
         console.log(note);
-        i++;
-      }
-
-      // TODO: Don't need to do this, just modulo the beat number
-      if (loop) {
-        // Once we've gone through all notes, shift them forward by loop length
-        if (i === notes.size) {
-          notes = this.shift(notes, length);
-          i = 0;
-        }
-      }
-    }
+      })
+    };
 
     clock.addCallback(this.cb);
     clock.start();

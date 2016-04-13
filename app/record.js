@@ -41,7 +41,7 @@ class Recorder {
 
   play() {
     this.scheduler = new Scheduler(this.bpm, this.quantize(this.notes));
-    this.scheduler.start(4, 4, true);
+    this.scheduler.start(4, 8, true); // 4 beat intro
   }
 
   setBpm(bpm) {
