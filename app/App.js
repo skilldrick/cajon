@@ -38,8 +38,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Grid samples={samples} recorder={this.state.recorder} />
-        <Controls recorder={this.state.recorder} />
+        <Grid samples={samples} recorder={this.recorder} />
+        <Controls recorder={this.recorder} />
       </div>
     );
   }
@@ -50,7 +50,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { recorder: new Recorder() };
+    this.recorder = new Recorder();
   }
 
 }
