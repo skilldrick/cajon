@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {render} from 'react-dom';
 import {playSource, samples} from './sounds.js';
 import {Recorder} from './record.js';
+import Footer from './Footer.js';
 
 const gridStyle = {
 };
@@ -40,6 +41,7 @@ class App extends Component {
       <div>
         <Grid samples={samples} recorder={this.recorder} />
         <Controls recorder={this.recorder} bpm={this.props.bpm} />
+        <Footer />
       </div>
     );
   }
