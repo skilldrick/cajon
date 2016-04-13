@@ -39,7 +39,7 @@ class App extends Component {
     return (
       <div>
         <Grid samples={samples} recorder={this.recorder} />
-        <Controls recorder={this.recorder} />
+        <Controls recorder={this.recorder} bpm={this.props.bpm} />
       </div>
     );
   }
@@ -50,7 +50,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.recorder = new Recorder();
+    this.recorder = new Recorder(this.props.bpm);
   }
 
 }
@@ -62,7 +62,7 @@ class Controls extends Component {
         <button onClick={this.start}>Start Recording</button>
         <button onClick={this.stop}>Stop Recording</button>
         <button onClick={this.play}>Play</button>
-        <input onInput={this.bpmChange} type="number" />
+        <input onInput={this.bpmChange} type="number" defaultValue={120} />
       </div>
     );
   }
@@ -160,4 +160,4 @@ class Button extends Component {
   }
 }
 
-render(<App />, document.getElementById('root'));
+render(<App bpm={120} />, document.getElementById('root'));

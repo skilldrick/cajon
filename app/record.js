@@ -5,10 +5,10 @@ import Metronome from './metronome.js';
 import Scheduler from './scheduler.js';
 
 class Recorder {
-  constructor() {
+  constructor(bpm) {
     this.running = false;
     this.startTime = 0;
-    this.bpm = 120;
+    this.bpm = bpm;
   }
 
   startRecording() {
@@ -45,6 +45,7 @@ class Recorder {
   }
 
   setBpm(bpm) {
+    this.bpm = bpm;
     this.metronome && this.metronome.setBpm(bpm);
     this.scheduler && this.scheduler.setBpm(bpm);
   }
