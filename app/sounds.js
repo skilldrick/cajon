@@ -1,8 +1,3 @@
-import { ctx, getCurrentTime } from "sine/audio";
-import getAudioBuffer from 'sine/ajax';
-import { createBufferSource } from 'sine/nodes';
-import { connect } from 'sine/util';
-
 const bufferNames = {
   'ch1': 'samples/drumatic3/2075__opm__ch-set1.wav',
   'ch2': 'samples/drumatic3/2076__opm__ch-set2.wav',
@@ -41,25 +36,6 @@ const bufferNames = {
   'tm5': 'samples/drumatic3/2109__opm__tm-set5.wav',
 };
 
-const objToAssoc = obj => {
-  return Object.keys(obj).map(key => [key, obj[key]]);
-};
-
-const assocToObj = assoc => {
-  return assoc.reduce((obj, [key, val]) => {
-    obj[key] = val;
-    return obj;
-  }, {});
-};
-
-const getBuffers = (bufferNames) => {
-  const bufferFutures = objToAssoc(bufferNames).map(([key, filename]) => {
-    return getAudioBuffer(filename).then(buffer => [key, buffer]);
-  });
-
-  return Promise.all(bufferFutures).then(buffers => assocToObj(buffers));
-}
-
 const samples = [
   [['1', 'tm2'], ['2', 'tm3'], ['3', 'rs2'], ['4', 'rs4']],
   [['Q', 'cp1'], ['W', 'cp4'], ['E', 'rs3'], ['R', 'rs5']],
@@ -67,4 +43,4 @@ const samples = [
   [['Z', 'kk3'], ['X', 'kk4'], ['C', 'ch2'], ['V', 'oh4']],
 ];
 
-module.exports = {getBuffers, bufferNames, samples};
+module.exports = {bufferNames, samples};
