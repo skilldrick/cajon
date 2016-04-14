@@ -1,11 +1,10 @@
-import { playSource } from './sounds.js';
-import { mapField } from './utils.js';
 import clock from 'sine/clock';
 
 class Scheduler {
-  constructor(bpm, notes) {
+  constructor(bpm, notes, sampler) {
     this.setBpm(bpm);
     this.partitionedNotes = this.partition(notes);
+    this.sampler = sampler;
   }
 
   partition(notes) {
@@ -26,8 +25,6 @@ class Scheduler {
   }
 
   start(beginOffset, length, loop = false) {
-    this.queuedNotes = [];
-
     this.cb = (realBeat, now, timeUntilBeat, beatLength) => {
       const beat = realBeat % length + beginOffset;
       const notes = this.partitionedNotes[beat];
@@ -36,9 +33,7 @@ class Scheduler {
         const noteOffsetFromNow = (note.beatOffset - beat) * beatLength;
         const noteTime = now + noteOffsetFromNow + timeUntilBeat;
 
-        this.queuedNotes.push(
-          playSource(note.sample, noteTime)
-        );
+        this.sampler.play(note.sample, noteTime)
 
         console.log(note);
       })
@@ -49,7 +44,7 @@ class Scheduler {
   }
 
   stop() {
-    this.queuedNotes && this.queuedNotes.forEach(note => note.stop());
+    // If we care, add stop method to sampler
 
     clock.removeCallback(this.cb);
     clock.stop();

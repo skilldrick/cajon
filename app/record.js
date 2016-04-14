@@ -1,14 +1,13 @@
 import { getCurrentTime } from 'sine/audio';
-import { playNotes } from './sounds.js';
-import { mapField } from './utils.js';
 import Metronome from './metronome.js';
 import Scheduler from './scheduler.js';
 
-class Recorder {
-  constructor(bpm) {
+export default class Recorder {
+  constructor(bpm, sampler) {
     this.running = false;
     this.startTime = 0;
     this.bpm = bpm;
+    this.sampler = sampler;
   }
 
   startRecording() {
@@ -17,7 +16,7 @@ class Recorder {
     this.notes = [];
 
     this.metronome && this.metronome.stop();
-    this.metronome = new Metronome(this.bpm);
+    this.metronome = new Metronome(this.bpm, this.sampler);
     this.metronome.start();
   }
 
@@ -40,7 +39,7 @@ class Recorder {
   }
 
   play() {
-    this.scheduler = new Scheduler(this.bpm, this.quantize(this.notes));
+    this.scheduler = new Scheduler(this.bpm, this.quantize(this.notes), this.sampler);
     this.scheduler.start(4, 4, true); // 4 beat intro, 4 beat loop
   }
 
@@ -50,12 +49,16 @@ class Recorder {
     this.scheduler && this.scheduler.setBpm(bpm);
   }
 
+  mapField(arr, field, cb) {
+    return arr.map(el => Object.assign({}, el, {
+      [field]: cb(el[field])
+    }));
+  }
+
   quantize(notes) {
     const quantizeAmount = 8;
-    return mapField(notes, 'beatOffset', beatOffset => {
+    return this.mapField(notes, 'beatOffset', beatOffset => {
       return Math.round(beatOffset * quantizeAmount) / quantizeAmount;
     });
   }
 }
-
-module.exports = {Recorder};

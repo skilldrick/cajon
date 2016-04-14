@@ -2,7 +2,6 @@ import { ctx, getCurrentTime } from "sine/audio";
 import getAudioBuffer from 'sine/ajax';
 import { createBufferSource } from 'sine/nodes';
 import { connect } from 'sine/util';
-import { objToAssoc, assocToObj, flatten } from './utils.js';
 
 const bufferNames = {
   'ch1': 'samples/drumatic3/2075__opm__ch-set1.wav',
@@ -42,41 +41,24 @@ const bufferNames = {
   'tm5': 'samples/drumatic3/2109__opm__tm-set5.wav',
 };
 
-const getBuffers = (bufferMap) => {
-  const bufferFutures = objToAssoc(bufferMap).map(([key, filename]) => {
+const objToAssoc = obj => {
+  return Object.keys(obj).map(key => [key, obj[key]]);
+};
+
+const assocToObj = assoc => {
+  return assoc.reduce((obj, [key, val]) => {
+    obj[key] = val;
+    return obj;
+  }, {});
+};
+
+const getBuffers = (bufferNames) => {
+  const bufferFutures = objToAssoc(bufferNames).map(([key, filename]) => {
     return getAudioBuffer(filename).then(buffer => [key, buffer]);
   });
 
   return Promise.all(bufferFutures).then(buffers => assocToObj(buffers));
 }
-
-//TODO: don't do this
-let buffers = null;
-
-getBuffers(bufferNames).then(buffs => {
-  buffers = buffs;
-});
-
-//TODO: move this to sine
-const playSource = (name, startTime=0) => {
-  const source = createBufferSource(buffers[name]);
-  connect(source, ctx.destination);
-  source.start(startTime);
-  return {
-    stop() {
-      source.stop()
-    }
-  }
-};
-
-const playNotes = (notes) => {
-  const now = getCurrentTime();
-
-  for (let {offset, sample} of notes) {
-    playSource(sample, now + offset);
-    console.log(offset, sample);
-  }
-};
 
 const samples = [
   [['1', 'tm2'], ['2', 'tm3'], ['3', 'rs2'], ['4', 'rs4']],
@@ -85,4 +67,4 @@ const samples = [
   [['Z', 'kk3'], ['X', 'kk4'], ['C', 'ch2'], ['V', 'oh4']],
 ];
 
-module.exports = {playSource, samples, playNotes};
+module.exports = {getBuffers, bufferNames, samples};

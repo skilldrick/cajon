@@ -1,10 +1,11 @@
 import Scheduler from './scheduler.js';
 
 class Metronome {
-  constructor(bpm) {
+  constructor(bpm, sampler) {
     this.bpm = bpm;
     this.running = false;
     this.startTime = 0;
+    this.sampler = sampler;
   }
 
   start() {
@@ -13,7 +14,7 @@ class Metronome {
       sample: 'rs2'
     };
 
-    this.scheduler = new Scheduler(this.bpm, [note]);
+    this.scheduler = new Scheduler(this.bpm, [note], this.sampler);
     this.scheduler.start(0, 1, true);
   }
 

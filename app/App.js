@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
-import { playSource, samples } from './sounds.js';
-import { Recorder } from './record.js';
 import Footer from './Footer.js';
+
+import { render } from 'react-dom';
+import { samples } from './sounds.js';
+import Recorder from './record.js';
+import initPromise from './init.js';
+
 
 const gridStyle = {
 };
@@ -39,8 +42,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Grid samples={samples} recorder={this.recorder} />
-        <Controls recorder={this.recorder} bpm={this.props.bpm} />
+        <Grid samples={samples} recorder={this.state.recorder} sampler={this.state.sampler} />
+        <Controls recorder={this.state.recorder} bpm={this.props.bpm} />
         <Footer />
       </div>
     );
@@ -52,7 +55,16 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.recorder = new Recorder(this.props.bpm);
+
+    this.state = {
+      sampler: null,
+      recorder: null
+    };
+
+    initPromise.then(sampler => {
+      const recorder = new Recorder(this.props.bpm, sampler);
+      this.setState({ sampler, recorder });
+    });
   }
 
 }
@@ -90,7 +102,7 @@ class Grid extends Component {
   render() {
     return (<div style={gridStyle}>
       {this.props.samples.map((row, i) =>
-        (<Row row={row} key={i} recorder={this.props.recorder} />)
+        (<Row row={row} key={i} recorder={this.props.recorder} sampler={this.props.sampler} />)
       )}
     </div>);
   }
@@ -100,7 +112,7 @@ class Row extends Component {
   render() {
     return (<div style={rowStyle}>
       {this.props.row.map(([keyName, sample], i) =>
-        (<Button sample={sample} keyName={keyName} key={i} recorder={this.props.recorder} />)
+        (<Button sample={sample} keyName={keyName} key={i} recorder={this.props.recorder} sampler={this.props.sampler} />)
       )}
     </div>);
   }
@@ -123,7 +135,7 @@ class Button extends Component {
   }
 
   playSample() {
-    playSource(this.props.sample);
+    this.props.sampler.play(this.props.sample, 0);
     this.props.recorder.addNote(this.props.sample);
   }
 
