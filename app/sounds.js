@@ -1,8 +1,8 @@
-import {ctx, getCurrentTime} from "sine/audio";
+import { ctx, getCurrentTime } from "sine/audio";
 import getAudioBuffer from 'sine/ajax';
-import {createBufferSource} from 'sine/nodes';
-import {connect} from 'sine/util';
-import {objToAssoc, assocToObj, flatten} from './utils.js';
+import { createBufferSource } from 'sine/nodes';
+import { connect } from 'sine/util';
+import { objToAssoc, assocToObj, flatten } from './utils.js';
 
 const bufferNames = {
   'ch1': 'samples/drumatic3/2075__opm__ch-set1.wav',

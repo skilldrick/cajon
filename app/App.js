@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {render} from 'react-dom';
-import {playSource, samples} from './sounds.js';
-import {Recorder} from './record.js';
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+import { playSource, samples } from './sounds.js';
+import { Recorder } from './record.js';
 import Footer from './Footer.js';
 
 const gridStyle = {

@@ -1,5 +1,5 @@
-import {playSource} from './sounds.js';
-import {mapField} from './utils.js';
+import { playSource } from './sounds.js';
+import { mapField } from './utils.js';
 import clock from 'sine/clock';
 
 class Scheduler {
