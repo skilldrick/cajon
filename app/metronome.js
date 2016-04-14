@@ -1,6 +1,6 @@
 import Scheduler from './scheduler.js';
 
-class Metronome {
+export default class Metronome {
   constructor(bpm, sampler) {
     this.scheduler = new Scheduler(bpm, sampler);
 
@@ -24,5 +24,3 @@ class Metronome {
     this.scheduler.setBpm(bpm);
   }
 }
-
-module.exports = Metronome;

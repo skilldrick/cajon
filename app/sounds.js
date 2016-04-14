@@ -1,4 +1,4 @@
-const bufferNames = {
+export const bufferNames = {
   'ch1': 'samples/drumatic3/2075__opm__ch-set1.wav',
   'ch2': 'samples/drumatic3/2076__opm__ch-set2.wav',
   'ch3': 'samples/drumatic3/2079__opm__ch-sset3.wav',
@@ -36,11 +36,9 @@ const bufferNames = {
   'tm5': 'samples/drumatic3/2109__opm__tm-set5.wav',
 };
 
-const samples = [
+export const samples = [
   [['1', 'tm2'], ['2', 'tm3'], ['3', 'rs2'], ['4', 'rs4']],
   [['Q', 'cp1'], ['W', 'cp4'], ['E', 'rs3'], ['R', 'rs5']],
   [['A', 'sn1'], ['S', 'sn5'], ['D', 'ch3'], ['F', 'rs4']],
   [['Z', 'kk3'], ['X', 'kk4'], ['C', 'ch2'], ['V', 'oh4']],
 ];
-
-module.exports = {bufferNames, samples};

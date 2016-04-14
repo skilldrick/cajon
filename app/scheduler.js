@@ -1,6 +1,6 @@
 import clock from 'sine/clock';
 
-class Scheduler {
+export default class Scheduler {
   constructor(bpm, sampler) {
     this.setBpm(bpm);
     this.sampler = sampler;
@@ -57,5 +57,3 @@ class Scheduler {
     clock.stop();
   }
 }
-
-module.exports = Scheduler;

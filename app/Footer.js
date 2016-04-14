@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import logo from 'sine/logo';
 
-class Footer extends Component {
+export default class Footer extends Component {
   render() {
     return (
       <a
@@ -33,5 +33,3 @@ class Footer extends Component {
     logo(document.getElementById("logo"), 50);
   }
 }
-
-module.exports = Footer;
