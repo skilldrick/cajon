@@ -1,10 +1,14 @@
 import clock from 'sine/clock';
 
 class Scheduler {
-  constructor(bpm, notes, sampler) {
+  constructor(bpm, sampler) {
     this.setBpm(bpm);
-    this.partitionedNotes = this.partition(notes);
     this.sampler = sampler;
+  }
+
+  // Currently just overwrites existing notes
+  setNotes(notes) {
+    this.partitionedNotes = this.partition(notes);
   }
 
   partition(notes) {

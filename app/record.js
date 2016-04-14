@@ -7,7 +7,9 @@ export default class Recorder {
     this.running = false;
     this.startTime = 0;
     this.bpm = bpm;
-    this.sampler = sampler;
+
+    this.metronome = new Metronome(this.bpm, sampler);
+    this.scheduler = new Scheduler(this.bpm, sampler);
   }
 
   startRecording() {
@@ -15,15 +17,14 @@ export default class Recorder {
     this.startTime = getCurrentTime();
     this.notes = [];
 
-    this.metronome && this.metronome.stop();
-    this.metronome = new Metronome(this.bpm, this.sampler);
+    this.metronome.stop();
     this.metronome.start();
   }
 
   stop() {
     this.running = false;
     this.metronome.stop();
-    this.scheduler && this.scheduler.stop();
+    this.scheduler.stop();
   }
 
   addNote(sample) {
@@ -39,14 +40,14 @@ export default class Recorder {
   }
 
   play() {
-    this.scheduler = new Scheduler(this.bpm, this.quantize(this.notes), this.sampler);
+    this.scheduler.setNotes(this.quantize(this.notes));
     this.scheduler.start(4, 4, true); // 4 beat intro, 4 beat loop
   }
 
   setBpm(bpm) {
     this.bpm = bpm;
-    this.metronome && this.metronome.setBpm(bpm);
-    this.scheduler && this.scheduler.setBpm(bpm);
+    this.metronome.setBpm(bpm);
+    this.scheduler.setBpm(bpm);
   }
 
   mapField(arr, field, cb) {
