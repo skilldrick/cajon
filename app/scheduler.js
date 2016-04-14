@@ -29,6 +29,8 @@ class Scheduler {
   }
 
   start(beginOffset, length, loop = false) {
+    this.queuedNotes = [];
+
     this.cb = (realBeat, now, timeUntilBeat, beatLength) => {
       const beat = realBeat % length + beginOffset;
       const notes = this.partitionedNotes[beat];
@@ -37,7 +39,9 @@ class Scheduler {
         const noteOffsetFromNow = (note.beatOffset - beat) * beatLength;
         const noteTime = now + noteOffsetFromNow + timeUntilBeat;
 
-        this.sampler.play(note.sample, noteTime)
+        this.queuedNotes.push(
+          this.sampler.play(note.sample, noteTime)
+        );
 
         console.log(note);
       })
@@ -48,8 +52,7 @@ class Scheduler {
   }
 
   stop() {
-    // If we care, add stop method to sampler
-
+    this.queuedNotes && this.queuedNotes.forEach(note => note.stop());
     clock.removeCallback(this.cb);
     clock.stop();
   }
