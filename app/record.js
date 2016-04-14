@@ -40,6 +40,7 @@ export default class Recorder {
   }
 
   play() {
+    this.scheduler.stop();
     this.scheduler.setNotes(this.quantize(this.notes));
     this.scheduler.start(4, 4, true); // 4 beat intro, 4 beat loop
   }

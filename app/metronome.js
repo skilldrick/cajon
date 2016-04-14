@@ -2,9 +2,7 @@ import Scheduler from './scheduler.js';
 
 class Metronome {
   constructor(bpm, sampler) {
-    this.bpm = bpm;
-    this.running = false;
-    this.scheduler = new Scheduler(this.bpm, sampler);
+    this.scheduler = new Scheduler(bpm, sampler);
 
     var note = {
       beatOffset: 0,
