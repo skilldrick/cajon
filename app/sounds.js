@@ -1,5 +1,7 @@
 import {ctx, getCurrentTime} from "sine/audio";
 import getAudioBuffer from 'sine/ajax';
+import {createBufferSource} from 'sine/nodes';
+import {connect} from 'sine/util';
 import {objToAssoc, assocToObj, flatten} from './utils.js';
 
 const bufferNames = {
@@ -56,16 +58,9 @@ getBuffers(bufferNames).then(buffs => {
 });
 
 //TODO: move this to sine
-const createSource = (buffer) => {
-  const source = ctx.createBufferSource();
-  source.buffer = buffer;
-  source.connect(ctx.destination);
-  return source;
-};
-
-//TODO: move this to sine
 const playSource = (name, startTime=0) => {
-  const source = createSource(buffers[name]);
+  const source = createBufferSource(buffers[name]);
+  connect(source, ctx.destination);
   source.start(startTime);
   return {
     stop() {
