@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Footer from './Footer.js';
+import RaisedButton from 'material-ui/lib/raised-button';
+import TextField from 'material-ui/lib/text-field';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import { render } from 'react-dom';
 import { samples } from './sounds.js';
@@ -14,21 +17,19 @@ const rowStyle = {
   clear: 'both',
 };
 
-const buttonStyle = highlight => { return {
+const padStyle = (highlight) => { return {
   width: '100px',
   height: '100px',
-  display: 'table',
-  backgroundColor: '#3af',
-  float: 'left',
   margin: '4px',
+  display: 'table',
+  float: 'left',
   cursor: 'pointer',
-  userSelect: 'none',
-  borderRadius: '5px',
-  boxShadow: highlight ? 'none' : '2px 2px 3px 1px #aaa',
-  border: highlight ? '1px solid white' : '1px solid black',
-  fontWeight: '300',
-  fontFamily: 'Arial',
-  textTransform: 'uppercase',
+  backgroundColor: highlight ? '#BBDEFB' : '#42A5F5',
+  transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
+  //boxSizing: 'border-box',
+  fontFamily: 'Roboto, sans-serif',
+  boxShadow: '0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.12)',
+  borderRadius: '2px',
 } };
 
 const buttonInnerStyle = {
@@ -38,12 +39,16 @@ const buttonInnerStyle = {
 };
 
 
+const Icon = (props) => {
+  return <i className={"fa fa-" + props.icon} ariaHidden="true"></i>
+};
+
 class App extends Component {
   render() {
     return (
       <div>
-        <Grid samples={samples} recorder={this.state.recorder} sampler={this.state.sampler} />
         <Controls recorder={this.state.recorder} bpm={this.props.bpm} />
+        <Grid samples={samples} recorder={this.state.recorder} sampler={this.state.sampler} />
         <Footer />
       </div>
     );
@@ -70,13 +75,23 @@ class App extends Component {
 }
 
 class Controls extends Component {
+  buttonStyle = {
+    marginRight: 10
+  }
+
   render() {
     return(
-      <div>
-        <button onClick={this.start}>Start Recording</button>
-        <button onClick={this.stop}>Stop Recording</button>
-        <button onClick={this.play}>Play</button>
-        <input onInput={this.bpmChange} type="number" defaultValue={120} />
+      <div style={{marginBottom: 20, marginLeft: 5}}>
+        <RaisedButton onClick={this.start} style={this.buttonStyle}>
+          <Icon icon="circle" />
+        </RaisedButton>
+        <RaisedButton onClick={this.stop} style={this.buttonStyle}>
+          <Icon icon="stop" />
+        </RaisedButton>
+        <RaisedButton onClick={this.play} style={this.buttonStyle}>
+          <Icon icon="play" />
+        </RaisedButton>
+        <TextField onInput={this.bpmChange} type="number" defaultValue={120} style={{width: 120}} />
       </div>
     );
   }
@@ -121,7 +136,7 @@ class Row extends Component {
 class Button extends Component {
   render() {
     return (
-      <div style={buttonStyle(this.state.highlight)} className="pad" onClick={this.handleClick}>
+      <div style={padStyle(this.state.highlight)} className="pad" onClick={this.handleClick}>
         <div style={buttonInnerStyle}>
           {this.props.keyName}: {this.props.sample}
         </div>
@@ -173,5 +188,11 @@ class Button extends Component {
     window.addEventListener('keyup', this.handleKeyup);
   }
 }
+
+// Needed for onTouchTap
+// Can go away when react 1.0 release
+// Check this repo:
+// https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin();
 
 render(<App bpm={120} />, document.getElementById('root'));

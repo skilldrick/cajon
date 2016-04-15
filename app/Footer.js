@@ -16,7 +16,7 @@ export default class Footer extends Component {
       >
         <p
           style={{
-            fontFamily: "Arial",
+            fontFamily: "Roboto, sans-serif",
             verticalAlign: "middle",
             position: "absolute",
             color: "black",
