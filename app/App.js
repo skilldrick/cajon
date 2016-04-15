@@ -25,7 +25,7 @@ const padStyle = (highlight) => { return {
   float: 'left',
   cursor: 'pointer',
   backgroundColor: highlight ? '#BBDEFB' : '#42A5F5',
-  transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
+  transition: 'all 250ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
   //boxSizing: 'border-box',
   fontFamily: 'Roboto, sans-serif',
   boxShadow: '0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.12)',
@@ -152,12 +152,12 @@ class Button extends Component {
   playSample() {
     this.props.sampler.play(this.props.sample, 0);
     this.props.recorder.addNote(this.props.sample);
+    this.addHighlight();
+    setTimeout(this.removeHighlight, 60);
   }
 
   handleClick = () => {
     this.playSample();
-    this.addHighlight();
-    setTimeout(this.removeHighlight, 50);
   }
 
   addHighlight = () => {
@@ -173,19 +173,11 @@ class Button extends Component {
   handleKeydown = event => {
     if (this.isThisButton(event)) {
       this.playSample();
-      this.addHighlight();
-    }
-  }
-
-  handleKeyup = event => {
-    if (this.isThisButton(event)) {
-      this.removeHighlight();
     }
   }
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeydown);
-    window.addEventListener('keyup', this.handleKeyup);
   }
 }
 
