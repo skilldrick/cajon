@@ -31,7 +31,7 @@ export default class Scheduler {
   start(beginOffset, length, loop = false) {
     this.queuedNotes = [];
 
-    this.cb = (beat, when, beatLength) => {
+    clock.onBeat((beat, when, beatLength) => {
       // Calculate beat within loop
       const loopBeat = loop ? beat % length + beginOffset : beat;
       const notes = this.partitionedNotes[loopBeat];
@@ -43,15 +43,14 @@ export default class Scheduler {
 
         console.log(note);
       })
-    };
+    });
 
-    clock.addCallback(this.cb);
     clock.start();
   }
 
   stop() {
     this.queuedNotes && this.queuedNotes.forEach(note => note.stop());
-    clock.removeCallback(this.cb);
+    clock.clearCallbacks();
     clock.stop();
   }
 }
