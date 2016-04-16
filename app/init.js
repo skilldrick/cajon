@@ -1,3 +1,4 @@
+import { ctx } from 'sine/audio';
 import getAudioBuffer from 'sine/ajax';
 import { bufferNames } from './sounds.js';
 import Sampler from 'sine/sampler';
@@ -23,5 +24,7 @@ const getBuffers = (bufferNames) => {
 
 export default getBuffers(bufferNames).then(bufferMap => {
   const sampler = new Sampler(bufferMap);
+  sampler.connect(ctx.destination);
+
   return sampler;
 });
