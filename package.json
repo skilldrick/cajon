@@ -16,7 +16,7 @@
     "react-redux": "^4.0.0",
     "react-tap-event-plugin": "^0.2.2",
     "redux": "^3.0.0",
-    "sine": "^0.1.6",
+    "sine": "^0.2.0",
     "webpack-dev-server": "^1.12.1"
   },
   "devDependencies": {

@@ -31,16 +31,14 @@ export default class Scheduler {
   start(beginOffset, length, loop = false) {
     this.queuedNotes = [];
 
-    this.cb = (realBeat, now, timeUntilBeat, beatLength) => {
-      const beat = realBeat % length + beginOffset;
-      const notes = this.partitionedNotes[beat];
+    this.cb = (beat, when, beatLength) => {
+      // Calculate beat within loop
+      const loopBeat = loop ? beat % length + beginOffset : beat;
+      const notes = this.partitionedNotes[loopBeat];
 
       notes && notes.forEach(note => {
-        const noteOffsetFromNow = (note.beatOffset - beat) * beatLength;
-        const noteTime = now + noteOffsetFromNow + timeUntilBeat;
-
         this.queuedNotes.push(
-          this.sampler.play(note.sample, noteTime)
+          this.sampler.play(note.sample, when(note.beatOffset - loopBeat))
         );
 
         console.log(note);
