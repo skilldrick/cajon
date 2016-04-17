@@ -1,19 +1,21 @@
-import Scheduler from './scheduler.js';
+import SamplerScheduler from './sampler_scheduler.js';
 
 export default class Metronome {
   constructor(bpm, sampler) {
-    this.scheduler = new Scheduler(bpm, sampler);
+    this.scheduler = new SamplerScheduler(bpm, sampler);
 
-    var note = {
-      beatOffset: 0,
-      sample: 'rs2'
-    };
+    const notes = [
+      { beatOffset: 0, sample: 'rs5' },
+      { beatOffset: 1, sample: 'rs2' },
+      { beatOffset: 2, sample: 'rs2' },
+      { beatOffset: 3, sample: 'rs2' }
+    ];
 
-    this.scheduler.setNotes([note]);
+    this.scheduler.addLoop(0, 4, notes);
   }
 
   start() {
-    this.scheduler.start(0, 1, true);
+    this.scheduler.start();
   }
 
   stop() {

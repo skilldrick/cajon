@@ -1,7 +1,7 @@
 import { ctx } from 'sine/audio';
 import getAudioBuffer from 'sine/ajax';
 import { bufferNames } from './sounds.js';
-import Sampler from 'sine/sampler';
+import { MultiBufferSampler } from 'sine/sampler';
 
 const objToAssoc = obj => {
   return Object.keys(obj).map(key => [key, obj[key]]);
@@ -23,7 +23,7 @@ const getBuffers = (bufferNames) => {
 }
 
 export default getBuffers(bufferNames).then(bufferMap => {
-  const sampler = new Sampler(bufferMap);
+  const sampler = new MultiBufferSampler(bufferMap);
   sampler.connect(ctx.destination);
 
   return sampler;

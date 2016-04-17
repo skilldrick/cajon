@@ -1,6 +1,6 @@
 import { getCurrentTime } from 'sine/audio';
 import Metronome from './metronome.js';
-import Scheduler from './scheduler.js';
+import SamplerScheduler from './sampler_scheduler.js';
 
 export default class Recorder {
   constructor(bpm, sampler) {
@@ -9,7 +9,7 @@ export default class Recorder {
     this.bpm = bpm;
 
     this.metronome = new Metronome(this.bpm, sampler);
-    this.scheduler = new Scheduler(this.bpm, sampler);
+    this.scheduler = new SamplerScheduler(this.bpm, sampler);
   }
 
   startRecording() {
@@ -25,6 +25,7 @@ export default class Recorder {
     this.running = false;
     this.metronome.stop();
     this.scheduler.stop();
+    this.queuedNotes && this.queuedNotes.forEach(note => note.stop());
   }
 
   addNote(sample) {
@@ -40,9 +41,13 @@ export default class Recorder {
   }
 
   play() {
+    this.queuedNotes = [];
     this.scheduler.stop();
-    this.scheduler.setNotes(this.quantize(this.notes));
-    this.scheduler.start(4, 4, true); // 4 beat intro, 4 beat loop
+    this.scheduler.clearLoops();
+     // 4 beat intro, 4 beat loop
+    this.scheduler.addLoop(4, 4, this.quantize(this.notes));
+
+    this.scheduler.start();
   }
 
   setBpm(bpm) {
