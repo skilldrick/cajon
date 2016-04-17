@@ -30,8 +30,9 @@ export default class Recorder {
 
   addNote(sample) {
     const beatLength = 60 / this.bpm;
+    const preRoll = (beatLength * 4);
     if (this.running) {
-      const offset = getCurrentTime() - this.startTime;
+      const offset = getCurrentTime() - this.startTime - preRoll;
       const note = {
         beatOffset: offset / beatLength,
         sample
@@ -44,8 +45,7 @@ export default class Recorder {
     this.queuedNotes = [];
     this.scheduler.stop();
     this.scheduler.clearLoops();
-     // 4 beat intro, 4 beat loop
-    this.scheduler.addLoop(4, 4, this.quantize(this.notes));
+    this.scheduler.addLoop(4, this.quantize(this.notes));
 
     this.scheduler.start();
   }

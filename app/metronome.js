@@ -11,7 +11,7 @@ export default class Metronome {
       { beatOffset: 3, sample: 'rs2' }
     ];
 
-    this.scheduler.addLoop(0, 4, notes);
+    this.scheduler.addLoop(4, notes);
   }
 
   start() {
