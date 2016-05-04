@@ -10,6 +10,12 @@ import Recorder from './record.js';
 import initPromise from './init.js';
 
 
+// Needed for onTouchTap
+// Can go away when react 1.0 release
+// Check this repo:
+// https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin();
+
 const gridStyle = {
 };
 
@@ -82,13 +88,13 @@ class Controls extends Component {
   render() {
     return(
       <div style={{marginBottom: 20, marginLeft: 5}}>
-        <RaisedButton onClick={this.start} style={this.buttonStyle}>
+        <RaisedButton onTouchTap={this.start} style={this.buttonStyle}>
           <Icon icon="circle" />
         </RaisedButton>
-        <RaisedButton onClick={this.stop} style={this.buttonStyle}>
+        <RaisedButton onTouchTap={this.stop} style={this.buttonStyle}>
           <Icon icon="stop" />
         </RaisedButton>
-        <RaisedButton onClick={this.play} style={this.buttonStyle}>
+        <RaisedButton onTouchTap={this.play} style={this.buttonStyle}>
           <Icon icon="play" />
         </RaisedButton>
         <TextField onInput={this.bpmChange} type="number" defaultValue={120} style={{width: 120}} />
@@ -136,7 +142,7 @@ class Row extends Component {
 class Button extends Component {
   render() {
     return (
-      <div style={padStyle(this.state.highlight)} className="pad" onClick={this.handleClick}>
+      <div style={padStyle(this.state.highlight)} className="pad" onTouchTap={this.handleClick}>
         <div style={buttonInnerStyle}>
           {this.props.keyName}: {this.props.sample}
         </div>
@@ -180,11 +186,5 @@ class Button extends Component {
     window.addEventListener('keydown', this.handleKeydown);
   }
 }
-
-// Needed for onTouchTap
-// Can go away when react 1.0 release
-// Check this repo:
-// https://github.com/zilverline/react-tap-event-plugin
-injectTapEventPlugin();
 
 render(<App bpm={120} />, document.getElementById('root'));
