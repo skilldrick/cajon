@@ -17,7 +17,9 @@ export default class SamplerScheduler extends Scheduler {
   }
 
   stop() {
-    this.queuedNotes && this.queuedNotes.forEach(note => note.stop());
+    this.queuedNotes && this.queuedNotes.forEach(note => {
+      try { note.stop(); } catch (e) {} // Safari throws an error
+    });
     super.stop();
   }
 }
