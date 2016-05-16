@@ -142,7 +142,12 @@ class Row extends Component {
 class Button extends Component {
   render() {
     return (
-      <div style={padStyle(this.state.highlight)} className="pad" onTouchTap={this.handleClick}>
+      <div
+        style={padStyle(this.state.highlight)}
+        className="pad"
+        onTouchStart={this.handleClick}
+        onMouseDown={('ontouchstart' in window) ? null : this.handleClick}
+      >
         <div style={buttonInnerStyle}>
           {this.props.keyName}: {this.props.sample}
         </div>
